@@ -1,17 +1,24 @@
 <!doctype html>
 <html>
 <head>
-    <title>Latest ideas</title>
+    <title>{% block title %}Latest ideas{% endblock %}</title>
     <meta charset="utf-8">
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
 <div id="content_wrapper">
+
+    <div id="sidebar">
+        <a id="writedown" href="{{ url_for('add_new_idea') }}">write down</a>
+
+        <p id="advice">think twice before creating someting useless like this app</p>
+
+        <div style="margin-top: 60px;"><a href="{{ url_for('latest_ideas') }}">latest ideas</a></div>
+    </div>
+
     <div id="content">
-
         {% block content %}{% endblock %}
-
     </div>
 </div>
 

@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block title %}write down new idea{% endblock %}
+
+{% block content %}
+    <h1 id="main_title">write down your idea</h1>
+
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
+
+    <form id="new_idea" method="post">
+        <p>title</p>
+        <input name="title" type="text" />
+
+        <p>the content of your brain</p>
+        <textarea name="content"></textarea>
+
+        <br />
+        <input type="submit" value="remember" />
+    </form>
+{% endblock %}
