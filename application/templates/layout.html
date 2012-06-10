@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+<head>
+    <title>Latest ideas</title>
+    <meta charset="utf-8">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div id="content_wrapper">
+    <div id="content">
+
+        {% block content %}{% endblock %}
+
+    </div>
+</div>
+
+</body>
+</html>
