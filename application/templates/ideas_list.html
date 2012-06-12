@@ -18,19 +18,20 @@
     {% endif %}
 </h1>
 
-<ul id="idea_list">
-    <li>
-        <h3><a class="header_link" href="{{ url_for('full_view', idea_id=42) }}">Create something new you moron</a></h3>    
-        <p><span class="date">10 June, 2012</span> by <span class="author"><a href="{{ url_for('author', author='kalimatas') }}">kalimatas</a></span></p>
-    </li>
-    <li>
-        <h3><a class="header_link" href="/">Create something new you moron</a></h3>    
-        <p><span class="date">10 June, 2012</span> by <span class="author"><a href="guzalexander.com">kalimatas</a></span></p>
-    </li>
-    <li>
-        <h3><a class="header_link" href="/">Create something new you moron</a></h3>    
-        <p><span class="date">10 June, 2012</span> by <span class="author"><a href="guzalexander.com">kalimatas</a></span></p>
-    </li>
-</ul>
+    {% if ideas %}
+
+        <ul id="idea_list">
+        {% for idea in ideas %}
+            <li>
+                <h3><a class="header_link" href="{{ url_for('full_view', idea_id=idea.key().id()) }}">{{ idea.title }}</a></h3>    
+                <p><span class="date">{{ idea.date.strftime('%d %B, %Y')}}</span> by 
+                <span class="author"><a href="{{ url_for('author', author=idea.author_nickname) }}">{{ idea.author_nickname }}</a></span></p>
+            </li>
+        {% endfor %}
+        </ul>
+
+    {% else %}
+        no ideas... as usual
+    {% endif %}
 
 {% endblock %}
