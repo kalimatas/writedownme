@@ -83,3 +83,7 @@ a.header_link:hover {
 div.error {
     color: red;
 }
+
+div#idea_content {
+    margin-top: 40px;
+}

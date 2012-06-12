@@ -59,7 +59,11 @@ def add_new_idea():
 
 def full_view(idea_id):
     """Full idea"""
-    return render_template('full.html')
+    idea = models.Idea.get_by_id(idea_id)
+    if not idea:
+        return abort(404)
+
+    return render_template('full.html', idea=idea)
 
 def author(author):
     """List of author's ideas"""

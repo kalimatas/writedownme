@@ -1,5 +1,15 @@
 {% extends "layout.html" %}
 
+{% block title %}
+    Author :: title        
+{% endblock %}
+
 {% block content %}
-    full view
+
+<h1 style="margin-bottom: 0;" id="main_title">title of the idea</h1>
+<p style="margin:0; padding:0; font-size: 0.7em;"><span class="date">{{ idea.date.strftime('%d %B, %Y')}}</span> by 
+<span class="author"><a href="{{ url_for('author', author=idea.author_nickname) }}">{{ idea.author_nickname }}</a></span></p>
+
+<div id="idea_content">Some text will be here.</div>
+
 {% endblock %}
