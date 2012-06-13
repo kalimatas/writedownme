@@ -10,6 +10,8 @@ from google.appengine.api import users
 from google.appengine.ext import db
 from application import models
 
+IDEAS_PER_PAGE = 20
+
 def auth_required(aFunc):
     """Require login"""
     @wraps(aFunc)
@@ -19,14 +21,21 @@ def auth_required(aFunc):
         return aFunc(*args, **kwargs)
     return _auth_wrapper
 
-def latest_ideas():
+def latest_ideas(page=0):
     """List of latest ideas"""
 
     query = models.Idea.all()
     query.order("-date")
-    ideas = query.fetch(20)
+    ideas_count = query.count()
+    ideas = query.fetch(IDEAS_PER_PAGE, page * IDEAS_PER_PAGE)
 
-    return render_template("ideas_list.html", ideas=ideas, logout_url=users.create_logout_url("/"))
+    has_next = ideas_count > (page * IDEAS_PER_PAGE + IDEAS_PER_PAGE)
+
+    return render_template("ideas_list.html", 
+                           ideas=ideas, 
+                           logout_url=users.create_logout_url("/"),
+                           current_page=page,
+                           has_next=has_next)
 
 @auth_required
 def add_new_idea():
@@ -65,15 +74,22 @@ def full_view(idea_id):
 
     return render_template('full.html', idea=idea)
 
-def author(author):
+def author(author, page=0):
     """List of author's ideas"""
 
     query = models.Idea.all()
     query.filter("author_nickname", author)
     query.order("-date")
-    ideas = query.fetch(20)
+    ideas_count = query.count()
+    ideas = query.fetch(IDEAS_PER_PAGE, page * IDEAS_PER_PAGE)
 
-    return render_template('ideas_list.html', author=author, ideas=ideas)
+    has_next = ideas_count > (page * IDEAS_PER_PAGE + IDEAS_PER_PAGE)
+
+    return render_template('ideas_list.html', 
+                           author=author, 
+                           ideas=ideas,
+                           current_page=page,
+                           has_next=has_next)
 
 @app.errorhandler(404)
 def not_found(error):

@@ -30,6 +30,30 @@
         {% endfor %}
         </ul>
 
+        <div id="pagination">
+        {% if current_page > 0 %}
+
+            {% if author %}
+                {% set prev_link = url_for("author", author=author, page=current_page - 1) %}
+            {% else %}
+                {% set prev_link = url_for("latest_ideas", page=current_page - 1) %}
+            {% endif %}
+
+            <a href="{{ prev_link }}">&larr; prev</a>&nbsp;&nbsp;
+        {% endif %}
+
+        {% if has_next %}
+
+            {% if author %}
+                {% set next_link = url_for("author", author=author, page=current_page + 1) %}
+            {% else %}
+                {% set next_link = url_for("latest_ideas", page=current_page + 1) %}
+            {% endif %}
+
+            <a href="{{ next_link }}">next &rarr;</a>
+        {% endif %}
+        </div>
+
     {% else %}
         no ideas... or may be no user... everything may happen
     {% endif %}
