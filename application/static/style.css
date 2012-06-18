@@ -98,3 +98,7 @@ a#writedown:hover {
     text-decoration: none;
     color: #333;
 }
+div#help {
+    float: left;
+    margin-left: 330px;
+}

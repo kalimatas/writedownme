@@ -1,5 +1,6 @@
 from functools import wraps
 from hashlib import md5
+from textile import textile
 from flask import render_template
 from flask import request
 from flask import redirect
@@ -54,7 +55,7 @@ def add_new_idea():
         author = users.get_current_user()
 
         title = request.form['title']
-        content = request.form['content']
+        content = textile(request.form['content'])
         author_id = author.user_id()
         author_nickname = author.nickname()
         idea = models.Idea(title=title, content=content, author_id=author_id, author_nickname=author_nickname)
