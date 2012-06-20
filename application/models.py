@@ -8,3 +8,4 @@ class Idea(db.Model):
     title = db.StringProperty(required=True)
     content = db.StringProperty(required=True, multiline=True)
     date = db.DateTimeProperty(auto_now_add=True)
+    hash = db.StringProperty(required=True)

@@ -1,5 +1,5 @@
 from functools import wraps
-from hashlib import md5
+from hashlib import sha256
 from textile import textile
 from flask import render_template
 from flask import request
@@ -12,6 +12,7 @@ from google.appengine.ext import db
 from application import models
 
 IDEAS_PER_PAGE = 20
+SALT = 'idea_project_salt'
 
 def auth_required(aFunc):
     """Require login"""
@@ -31,11 +32,13 @@ def latest_ideas(page=0):
     ideas = query.fetch(IDEAS_PER_PAGE, page * IDEAS_PER_PAGE)
 
     has_next = ideas_count > (page * IDEAS_PER_PAGE + IDEAS_PER_PAGE)
+    current_user = users.get_current_user()
 
     return render_template("ideas_list.html", 
                            ideas=ideas, 
                            logout_url=users.create_logout_url("/"),
                            current_page=page,
+                           current_user=current_user,
                            has_next=has_next)
 
 @auth_required
@@ -58,7 +61,8 @@ def add_new_idea():
         content = textile(request.form['content'])
         author_id = author.user_id()
         author_nickname = author.nickname()
-        idea = models.Idea(title=title, content=content, author_id=author_id, author_nickname=author_nickname)
+        hash = sha256(SALT + author.nickname() + title).hexdigest()
+        idea = models.Idea(title=title, content=content, author_id=author_id, author_nickname=author_nickname, hash=hash)
 
         try:
             idea.put() 
@@ -66,6 +70,15 @@ def add_new_idea():
             return abort(500)
 
         return redirect('/' + str(users.get_current_user().nickname()))
+
+@auth_required
+def delete_idea(hash):
+    back_url = '/' if request.referrer is None else request.referrer
+    return redirect(back_url)
+
+@auth_required
+def edit_idea(hash):
+    pass
 
 def full_view(idea_id):
     """Full idea"""
@@ -85,11 +98,13 @@ def author(author, page=0):
     ideas = query.fetch(IDEAS_PER_PAGE, page * IDEAS_PER_PAGE)
 
     has_next = ideas_count > (page * IDEAS_PER_PAGE + IDEAS_PER_PAGE)
+    current_user = users.get_current_user()
 
     return render_template('ideas_list.html', 
                            author=author, 
                            ideas=ideas,
                            current_page=page,
+                           current_user=current_user,
                            has_next=has_next)
 
 @app.errorhandler(404)

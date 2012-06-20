@@ -10,6 +10,8 @@
 
 {% block content %}
 
+<a href="{{ logout_url }}">logout</a>
+
 <h1 id="main_title">
     {% if author %}
         {{ author }}'s cool ideas
@@ -24,8 +26,16 @@
         {% for idea in ideas %}
             <li>
                 <h3><a class="header_link" href="{{ url_for('full_view', idea_id=idea.key().id()) }}">{{ idea.title }}</a></h3>    
-                <p><span class="date">{{ idea.date.strftime('%d %B, %Y')}}</span> by 
-                <span class="author"><a href="{{ url_for('author', author=idea.author_nickname) }}">{{ idea.author_nickname }}</a></span></p>
+                <p>
+                    <span class="date">{{ idea.date.strftime('%d %B, %Y')}}</span> by 
+                    <span class="author"><a href="{{ url_for('author', author=idea.author_nickname) }}">{{ idea.author_nickname }}</a></span>
+                    {% if current_user and current_user.user_id() == idea.author_id %}
+                        <span style="padding-left: 30px;">
+                            <a href="{{ url_for('delete_idea', hash=idea.hash) }}">edit</a>&nbsp;&nbsp;
+                            <a href="{{ url_for('delete_idea', hash=idea.hash) }}">delete</a>
+                        </span>
+                    {% endif %}
+                </p>
             </li>
         {% endfor %}
         </ul>
