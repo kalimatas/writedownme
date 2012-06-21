@@ -7,8 +7,15 @@
 {% block content %}
 
 <h1 style="margin-bottom: 0;" id="main_title">{{ idea.title }}</h1>
-<p style="margin:0; padding:0; font-size: 0.7em;"><span class="date">{{ idea.date.strftime('%d %B, %Y')}}</span> by 
-<span class="author"><a href="{{ url_for('author', author=idea.author_nickname) }}">{{ idea.author_nickname }}</a></span></p>
+<p style="margin:0; padding:0; font-size: 0.7em;">
+    <span class="date">{{ idea.date.strftime('%d %B, %Y')}}</span> by 
+    <span class="author"><a href="{{ url_for('author', author=idea.author_nickname) }}">{{ idea.author_nickname }}</a></span>
+    {% if current_user and current_user.user_id() == idea.author_id %}
+        <span style="padding-left: 30px;">
+            <a href="{{ url_for('delete_idea', hash=idea.hash) }}">delete</a>
+        </span>
+    {% endif %}
+</p>
 
 <div id="idea_content">{{ idea.content|safe }}</div>
 

@@ -73,7 +73,22 @@ def add_new_idea():
 
 @auth_required
 def delete_idea(hash):
+    query = models.Idea.all()
+    query.filter('hash', hash)
+
+    idea = query.get()
+    if idea is None:
+        return abort(404)
+
+    author = users.get_current_user()
+    if author.user_id() != idea.author_id:
+        return render_template('forbidden.html')
+
+    idea.delete()
     back_url = '/' if request.referrer is None else request.referrer
+    if "idea" in back_url:
+        back_url = '/' + str(author.nickname())
+
     return redirect(back_url)
 
 @auth_required
@@ -86,7 +101,7 @@ def full_view(idea_id):
     if not idea:
         return abort(404)
 
-    return render_template('full.html', idea=idea)
+    return render_template('full.html', idea=idea, current_user=users.get_current_user())
 
 def author(author, page=0):
     """List of author's ideas"""
