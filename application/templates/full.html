@@ -12,6 +12,7 @@
     <span class="author"><a href="{{ url_for('author', author=idea.author_nickname) }}">{{ idea.author_nickname }}</a></span>
     {% if current_user and current_user.user_id() == idea.author_id %}
         <span style="padding-left: 30px;">
+            <a href="{{ url_for('edit_idea', hash=idea.hash) }}">edit</a>&nbsp;&nbsp;
             <a href="{{ url_for('delete_idea', hash=idea.hash) }}">delete</a>
         </span>
     {% endif %}

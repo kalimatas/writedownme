@@ -93,7 +93,36 @@ def delete_idea(hash):
 
 @auth_required
 def edit_idea(hash):
-    pass
+    if request.method == "GET":
+        final_hash = hash
+    else:
+        final_hash = request.form['hidden_hash']
+
+    if final_hash is None:
+        return abort(500)
+
+    query = models.Idea.all()
+    query.filter('hash', final_hash)
+
+    idea = query.get()
+    if idea is None:
+        return abort(404)
+
+    author = users.get_current_user()
+    if author.user_id() != idea.author_id:
+        return render_template('forbidden.html')
+
+    from application.html2textile import html2textile
+    if request.method == "GET":
+        return render_template('new.html', edit=True, hash=idea.hash, title=idea.title, content=html2textile(idea.content))
+    else:
+        if request.form['title'] == '' or request.form['content'] == '':
+            return render_template('new.html', edit=True, hash=idea.hash, title=idea.title, content=html2textile(idea.content), error='at least try to write something')
+
+        idea.title = request.form['title']
+        idea.content = textile(request.form['content'])
+        idea.put()
+        return render_template('new.html', edit=True, hash=idea.hash, title=idea.title, content=html2textile(idea.content), message='saved')
 
 def full_view(idea_id):
     """Full idea"""

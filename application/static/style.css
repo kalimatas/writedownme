@@ -69,6 +69,7 @@ span.date {
 
 a:hover {
     text-decoration: none;
+    color: #319bc2;
 }
 
 a.header_link {
@@ -77,11 +78,15 @@ a.header_link {
 }
 
 a.header_link:hover {
-    color: orange;
+    color: #319bc2;
 }
 
 div.error {
     color: red;
+}
+
+div.message_success {
+    color: green;
 }
 
 div#idea_content {

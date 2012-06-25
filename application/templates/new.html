@@ -3,18 +3,32 @@
 {% block title %}write down new idea{% endblock %}
 
 {% block content %}
-    <h1 id="main_title">write down your idea</h1>
+    <h1 id="main_title">
+        {% if edit != True %}
+            write down your idea
+        {% else %}
+            changed your mind?! ok, you may edit your idea
+        {% endif %}
+    </h1>
 
     {% if error %}
         <div class="error">{{ error }}</div>
     {% endif %}
 
-    <form id="new_idea" method="post">
+    {% if message %}
+        <div class="message_success">{{ message }}</div>
+    {% endif %}
+
+    <form id="new_idea" method="post" action="{% if edit == True %}{{ url_for('edit_idea', hash=hash) }}{% else %}{{ url_for('add_new_idea') }}{% endif %}">
+        {% if edit == True %}
+            <input name="hidden_hash" type="hidden" value="{{ hash }}" />
+        {% endif %}
+
         <p>title</p>
-        <input name="title" type="text" />
+        <input name="title" type="text" value="{% if title %}{{ title }}{% endif %}" />
 
         <p>the content of your brain</p>
-        <textarea name="content"></textarea>
+        <textarea name="content">{% if content %}{{ content }}{% endif %}</textarea>
 
         <div style="height: 10px; clear: both;"></div>
         <div style="float: left"><input type="submit" value="remember" /></div>
